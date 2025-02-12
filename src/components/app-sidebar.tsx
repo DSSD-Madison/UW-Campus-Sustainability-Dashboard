@@ -3,11 +3,9 @@ import {
   BarChart2,
   Leaf,
   FileText,
-  Globe,
   HelpCircle,
   Send,
-  Building2,
-  Cloud,
+  LogIn
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -17,14 +15,16 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
 } from "@/components/ui/sidebar"
 
+import { useContext } from "react"
+import { AppContext } from "@/context/AppContext"
+import { defaultUser } from "@/types/user/user"
+
 const data = {
-  user: {
-    name: "Admin",
-    email: "admin@university.edu",
-    avatar: "/api/placeholder/32/32",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -70,26 +70,23 @@ const data = {
       icon: Send,
     },
   ],
-  facilities: [
-    {
-      name: "Main Campus",
-      url: "#",
-      icon: Building2,
-    },
-    {
-      name: "Research Center",
-      url: "#",
-      icon: Globe,
-    },
-    {
-      name: "Data Center",
-      url: "#",
-      icon: Cloud,
-    },
-  ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user, setUser } = useContext(AppContext)
+
+  const handleLogout = () => {
+    setUser(defaultUser)
+  }
+
+  const handleLogin = () => {
+    setUser({
+      name: "John Doe",
+      email: "j@wisc.edu",
+      avatar: undefined,
+    })
+  }
+
   return (
     <Sidebar
       className="top-[--header-height] !h-[calc(100svh-var(--header-height))]"
@@ -100,7 +97,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {user.name ? (
+          <NavUser user={user} onLogout={handleLogout} />
+        ) : (
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                size="lg"
+                onClick={handleLogin}
+              >
+                <LogIn className="h-4 w-4" />
+                <div className="grid flex-1 text-left text-sm">
+                  <span className="font-semibold">Sign In</span>
+                </div>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        )}
       </SidebarFooter>
     </Sidebar>
   )

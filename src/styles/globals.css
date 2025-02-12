@@ -5,9 +5,9 @@
 @layer base {
   :root {
 
-    --white: 0 0% 100%;
-    
-    --background: 0 0% 100%;
+    --wbackground: 0 0% 100%;
+
+    --background: 0 0% 96%;
     --foreground: 240 5.3% 26.1%;
 
     --muted: 240 4.8% 95.9%;
