@@ -49,24 +49,24 @@ const data = {
     },
     {
       title: "About",
-      url: "#",
+      url: "/about",
       icon: HelpCircle,
     },
     {
       title: "Documentation",
-      url: "#",
+      url: "/LINK_TO_DOCUMENTATION",
       icon: FileText,
     }
   ],
   navSecondary: [
     {
       title: "Support",
-      url: "#",
+      url: "/LINK_TO_SUPPORT",
       icon: HelpCircle,
     },
     {
       title: "Feedback",
-      url: "#",
+      url: "/LINK_TO_FEEDBACK",
       icon: Send,
     },
   ],
