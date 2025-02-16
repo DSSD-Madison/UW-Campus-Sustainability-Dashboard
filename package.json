@@ -10,9 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@deck.gl/aggregation-layers": "^9.1.1",
+    "@deck.gl/layers": "^9.1.1",
+    "@deck.gl/react": "^9.1.1",
     "@tailwindcss/vite": "^4.0.5",
+    "deck.gl": "^9.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-map-gl": "^8.0.1",
     "react-router-dom": "^7.1.5",
     "tailwind": "^4.0.0",
     "tailwindcss": "^4.0.5"

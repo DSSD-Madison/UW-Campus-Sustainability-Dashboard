@@ -1,8 +1,8 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./routes/Home";
-import Dashboard from "./routes/Dashboard";
-import Dorms from "./routes/Dorms";
-import NotFound from "./routes/NotFound";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './routes/Home';
+import Dashboard from './routes/Dashboard';
+import Dorms from './routes/Dorms';
+import NotFound from './routes/NotFound';
 
 const App = () => {
   return (
