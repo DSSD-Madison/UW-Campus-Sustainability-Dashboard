@@ -3,6 +3,7 @@ import Layout from "./layout/Layout";
 import Home from "./routes/Home";
 // import Dorms from "./routes/Dorms";
 import { AppProvider } from "./context/AppContext";
+import About from "@/routes/About.tsx";
 
 const App = () => {
 
@@ -10,6 +11,10 @@ const App = () => {
     {
       element: Home,
       path: '/'
+    },
+    {
+      element: About,
+      path: '/about'
     }
   ]
   return (
