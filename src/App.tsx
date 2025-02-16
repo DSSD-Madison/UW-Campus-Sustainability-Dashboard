@@ -12,23 +12,11 @@ const App = () => {
   const routes = [
     {
       element: Home,
-      path: '/',
-    },
-    {
-      element: Heatmap,
-      path : '/heatmap'
+      path: '/'
     },
     {
       element: About,
-      path : '/about'
-    },
-    {
-      element: Locations,
-      path : '/locations'
-    },
-    {
-      element: NotFound,
-      path: '*'
+      path: '/about'
     }
   ]
   return (
