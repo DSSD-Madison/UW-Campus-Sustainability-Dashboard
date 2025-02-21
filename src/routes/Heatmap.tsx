@@ -1,7 +1,6 @@
-import React from 'react';
 import DeckGL from '@deck.gl/react';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
-import { Map } from 'react-map-gl';
+import Map from 'react-map-gl/maplibre';
 
 const MAPBOX_ACCESS_TOKEN = 'YOUR_MAPBOX_ACCESS_TOKEN';
 

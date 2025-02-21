@@ -1,5 +1,4 @@
-import React from 'react';
-import Heatmap from '../Heatmap';
+import Heatmap from "./Heatmap.tsx";
 
 const Dorms = () => {
   return (
