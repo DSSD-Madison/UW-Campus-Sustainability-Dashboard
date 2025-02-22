@@ -1,50 +1,97 @@
+// deck.gl
+// SPDX-License-Identifier: MIT
+// Copyright (c) vis.gl contributors
+
+import React, {useState, useCallback} from 'react';
+import {createRoot} from 'react-dom/client';
+import {Map} from 'react-map-gl/maplibre';
 import DeckGL from '@deck.gl/react';
-import { HeatmapLayer } from '@deck.gl/aggregation-layers';
-import Map from 'react-map-gl/maplibre';
+import {LinearInterpolator, PickingInfo} from '@deck.gl/core';
+import {colorBins, H3TileLayer, h3QuerySource} from '@deck.gl/carto';
+import {TooltipContent} from '@deck.gl/core/dist/lib/tooltip';
 
-const MAPBOX_ACCESS_TOKEN = 'YOUR_MAPBOX_ACCESS_TOKEN';
-
-//initial view state (centered on Madison, WI)
 const INITIAL_VIEW_STATE = {
-  longitude: -89.4012,
-  latitude: 43.0731,
-  zoom: 12,
-  pitch: 45,
-  bearing: 0,
+    latitude: 43.073798,
+    longitude: -89.401204,
+    zoom: 250,
+    pitch: 30,
+    bearing: -60
 };
 
-//dorm data (latitude, longitude, and weight for heatmap intensity)
-const DORM_DATA = [
-  { coordinates: [-89.4012, 43.0731], weight: 1 }, 
-  { coordinates: [-89.4123, 43.0765], weight: 0.8 },
-  { coordinates: [-89.3987, 43.0701], weight: 0.6 },
-];
+const globalOptions = {
+    accessToken:
+        // TODO: make env variable work. DO NOT PUSH ACCESS TOKEN TO GITHUB.,
 
-const Heatmap = () => {
-  const layers = [
-    new HeatmapLayer({
-      id: 'heatmap-layer',
-      data: DORM_DATA,
-      getPosition: (d) => d.coordinates,
-      getWeight: (d) => d.weight,
-      radiusPixels: 50,
-      intensity: 1,
-      threshold: 0.05,
-    }),
-  ];
-
-  return (
-    <DeckGL
-      initialViewState={INITIAL_VIEW_STATE}
-      controller={true}
-      layers={layers}
-    >
-      <Map
-        mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
-        mapStyle="mapbox://styles/mapbox/dark-v10"
-      />
-    </DeckGL>
-  );
+    connectionName: 'carto_dw'
 };
+const transitionInterpolator = new LinearInterpolator();
 
-export default Heatmap;
+export default function App({
+                                urbanity = 'any',
+                                tourism = 0,
+                                mapStyle = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
+                            }) {
+    const [viewState, updateViewState] = useState<Record<string, any>>(INITIAL_VIEW_STATE);
+
+    const rotateCamera = useCallback(() => {
+        updateViewState(v => ({
+            ...v,
+            bearing: v.bearing + 30,
+            transitionDuration: 30000,
+            transitionInterpolator,
+            onTransitionEnd: rotateCamera
+        }));
+    }, []);
+
+    const data = {}
+
+    const layers = [
+        new H3TileLayer({
+            id: 'carto-layer',
+            //@ts-ignore
+            data,
+            // @ts-ignore
+            getFillColor: colorBins({
+                attr: 'pop',
+                domain: [0, 10, 100, 1000, 10000, 50000, 100000],
+                colors: 'PinkYl'
+            }),
+            pickable: true,
+            filled: true,
+            extruded: true,
+            elevationScale: 0.5,
+            getElevation: d => d.properties.pop,
+            // transitions: {
+            //   getElevation: {duration: 1000, enter: () => [0]},
+            //   getFillColor: {duration: 1000}
+            // },
+            loadOptions: {
+                // TODO use workers once v9.alpha packages available
+                worker: true
+            }
+        })
+    ];
+
+    const getTooltip = ({object}: PickingInfo): TooltipContent => {
+        if (!object) return null;
+        const population = object.properties.pop;
+        return `Population: ${Math.round(population)}`;
+    };
+
+    return (
+        <DeckGL
+            controller={true}
+            viewState={viewState}
+            layers={layers}
+            getTooltip={getTooltip}
+            onLoad={rotateCamera}
+            onViewStateChange={v => updateViewState(v.viewState)}
+        >
+            <Map reuseMaps mapStyle={mapStyle}/>
+        </DeckGL>
+    );
+}
+
+export function renderToDOM(container) {
+    createRoot(container).render(<App/>);
+}
