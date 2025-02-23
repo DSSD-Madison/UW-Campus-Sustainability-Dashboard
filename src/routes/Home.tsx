@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TrendingUp, BarChart2, RefreshCw, Droplet } from "lucide-react";
+import { PieGraph } from "@/components/PieGraph";
 
 const Dashboard: React.FC = () => {
   const [timeframe, setTimeframe] = useState("Last Month");
@@ -118,7 +119,7 @@ const Dashboard: React.FC = () => {
               </SelectContent>
             </Select>
           </div>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={700}>
             <LineChart data={data}>
               <XAxis dataKey="name" stroke="#555" />
               <YAxis stroke="#555" />
@@ -183,6 +184,7 @@ const Dashboard: React.FC = () => {
               ))}
             </TableBody>
           </Table>
+          <PieGraph />
         </motion.div>
       </div>
     </motion.div>
