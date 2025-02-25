@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { TrendingUp, BarChart2, RefreshCw, Droplet } from "lucide-react";
 import { PieGraph } from "@/components/PieGraph";
+import { DatePickerWithRange } from "@/components/DatePickerWithRange";
 
 const Dashboard: React.FC = () => {
   const [timeframe, setTimeframe] = useState("Last Month");
@@ -61,6 +62,20 @@ const Dashboard: React.FC = () => {
       transition={{ duration: 0.6 }}
       className="p-8 space-y-8 bg-gray-100 min-h-screen text-gray-900"
     >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" style={{marginTop: -15}}>
+        <h1 style={{fontSize: 30, fontWeight: 'bold'}}>Dashboard</h1>
+        <Select value={timeframe} onValueChange={setTimeframe}>
+            <SelectTrigger className="w-48 bg-gray-300 border-gray-300 focus-visible:ring-0 focus-visible:outline-none rounded-none">
+              <SelectValue>{timeframe}</SelectValue>
+            </SelectTrigger>
+            <SelectContent className="bg-white border-gray-300 text-gray-900">
+              <SelectItem value="Last Week">Last Week</SelectItem>
+              <SelectItem value="Last Month">Last Month</SelectItem>
+              <SelectItem value="Last 6 Months">Last 6 Months</SelectItem>
+            </SelectContent>
+          </Select>
+          <DatePickerWithRange />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           {
@@ -119,7 +134,7 @@ const Dashboard: React.FC = () => {
               </SelectContent>
             </Select>
           </div>
-          <ResponsiveContainer width="100%" height={700}>
+          <ResponsiveContainer width="100%" height={500}>
             <LineChart data={data}>
               <XAxis dataKey="name" stroke="#555" />
               <YAxis stroke="#555" />
