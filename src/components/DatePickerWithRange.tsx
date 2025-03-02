@@ -14,6 +14,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+import {
+  Card,
+  CardContent,
+} from "@/components/ui/card"
+
 export function DatePickerWithRange({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
@@ -23,7 +28,9 @@ export function DatePickerWithRange({
   })
 
   return (
-    <div className={cn("grid gap-2", className)}>
+    <Card className="flex flex-col items-center justify-center rounded-none w-fit">
+      <CardContent className="flex flex-col items-center justify-center pb-1 px-1 pt-1 w-fit">
+    <div className={cn("flex items-center gap-2", className)}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -60,6 +67,9 @@ export function DatePickerWithRange({
           />
         </PopoverContent>
       </Popover>
+      <Button>Download</Button>
     </div>
+    </CardContent>
+    </Card>
   )
 }

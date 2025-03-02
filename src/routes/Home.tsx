@@ -28,6 +28,7 @@ import {
 import { TrendingUp, BarChart2, RefreshCw, Droplet } from "lucide-react";
 import { PieGraph } from "@/components/PieGraph";
 import { DatePickerWithRange } from "@/components/DatePickerWithRange";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const Dashboard: React.FC = () => {
   const [timeframe, setTimeframe] = useState("Last Month");
@@ -76,6 +77,22 @@ const Dashboard: React.FC = () => {
           </Select>
           <DatePickerWithRange />
       </div>
+      <Tabs defaultValue="account" className="w-[220px]">
+  <TabsList className="flex bg-gray-300 p-6 rounded-lg gap-x-2">
+    <TabsTrigger 
+      value="account" 
+      className="px-8 py-1 text-lg font-semibold text-black data-[state=active]:bg-white data-[state=active]:text-black rounded-lg transition"
+    >
+      KW
+    </TabsTrigger>
+    <TabsTrigger 
+      value="password" 
+      className="px-8 py-1 text-lg font-semibold text-black data-[state=active]:bg-white data-[state=active]:text-black rounded-lg transition"
+    >
+      CO2
+    </TabsTrigger>
+  </TabsList>
+</Tabs>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           {
