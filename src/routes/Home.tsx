@@ -28,10 +28,13 @@ import {
 import { TrendingUp, BarChart2, RefreshCw, Droplet } from "lucide-react";
 import { PieGraph } from "@/components/PieGraph";
 import { DatePickerWithRange } from "@/components/DatePickerWithRange";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Dashboard: React.FC = () => {
   const [timeframe, setTimeframe] = useState("Last Month");
+  const [hall, setHall] = useState("University Overview");
+  const [tab, setTab] = useState("KW");
+
   const data = {
     "Last Week": [
       { name: "Mon", value: 30, overall: 50 },
@@ -63,36 +66,39 @@ const Dashboard: React.FC = () => {
       transition={{ duration: 0.6 }}
       className="p-8 space-y-8 bg-gray-100 min-h-screen text-gray-900"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" style={{marginTop: -15}}>
-        <h1 style={{fontSize: 30, fontWeight: 'bold'}}>Dashboard</h1>
-        <Select value={timeframe} onValueChange={setTimeframe}>
-            <SelectTrigger className="w-48 bg-gray-300 border-gray-300 focus-visible:ring-0 focus-visible:outline-none rounded-none">
-              <SelectValue>{timeframe}</SelectValue>
-            </SelectTrigger>
-            <SelectContent className="bg-white border-gray-300 text-gray-900">
-              <SelectItem value="Last Week">Last Week</SelectItem>
-              <SelectItem value="Last Month">Last Month</SelectItem>
-              <SelectItem value="Last 6 Months">Last 6 Months</SelectItem>
-            </SelectContent>
-          </Select>
-          <DatePickerWithRange />
+      <div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        style={{ marginTop: -15 }}
+      >
+        <h1 style={{ fontSize: 30, fontWeight: "bold" }}>Dashboard</h1>
+        <Select value={hall} onValueChange={setHall}>
+          <SelectTrigger className="w-48 bg-gray-300 border-gray-300 focus-visible:ring-0 focus-visible:outline-none rounded-none">
+            <SelectValue>{hall}</SelectValue>
+          </SelectTrigger>
+          <SelectContent className="bg-white border-gray-300 text-gray-900">
+            <SelectItem value="University Overview">University Overview</SelectItem>
+            {/* TODO: add all dorms as option */}
+            <SelectItem value="Dejope Residence Hall">Dejope Residence Hall</SelectItem>
+          </SelectContent>
+        </Select>
+        <DatePickerWithRange />
       </div>
-      <Tabs defaultValue="account" className="w-[220px]">
-  <TabsList className="flex bg-gray-300 p-6 rounded-lg gap-x-2">
-    <TabsTrigger 
-      value="account" 
-      className="px-8 py-1 text-lg font-semibold text-black data-[state=active]:bg-white data-[state=active]:text-black rounded-lg transition"
-    >
-      KW
-    </TabsTrigger>
-    <TabsTrigger 
-      value="password" 
-      className="px-8 py-1 text-lg font-semibold text-black data-[state=active]:bg-white data-[state=active]:text-black rounded-lg transition"
-    >
-      CO2
-    </TabsTrigger>
-  </TabsList>
-</Tabs>
+      <Tabs defaultValue={tab} onValueChange={setTab} className="w-[220px]">
+        <TabsList className="flex bg-gray-300 p-6 rounded-lg gap-x-2">
+          <TabsTrigger
+            value="KW"
+            className="px-8 py-1 text-lg font-semibold text-black data-[state=active]:bg-white data-[state=active]:text-black rounded-lg transition"
+          >
+            KW
+          </TabsTrigger>
+          <TabsTrigger
+            value="CO2"
+            className="px-8 py-1 text-lg font-semibold text-black data-[state=active]:bg-white data-[state=active]:text-black rounded-lg transition"
+          >
+            CO2
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           {
