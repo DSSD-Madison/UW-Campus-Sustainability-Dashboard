@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   LineChart,
   Line,
@@ -25,26 +25,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TrendingUp, BarChart2, RefreshCw, Droplet } from "lucide-react";
+import { TrendingUp, BarChart2, RefreshCw } from "lucide-react";
 import { PieGraph } from "@/components/PieGraph";
 import { DatePickerWithRange } from "@/components/DatePickerWithRange";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const CustomTabSlider: React.FC<{
   value: string;
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
   return (
-    <div className="w-[160px] bg-gray-100 rounded-md relative">
+    <div className="w-[160px] bg-gray-100/50 backdrop-blur-sm rounded-lg relative">
       <motion.div
-        className="absolute bg-green-500 rounded-md shadow-sm"
+        className="absolute bg-green-500 rounded-lg shadow-sm"
         animate={{
           x: value === "KW" ? 0 : 80,
         }}
         transition={{
           type: "spring",
-          stiffness: 400,
+          stiffness: 500,
           damping: 30,
+          mass: 0.5,
         }}
         style={{
           width: "80px",
@@ -56,7 +56,7 @@ const CustomTabSlider: React.FC<{
       <div className="flex relative z-10">
         <button
           onClick={() => onChange("KW")}
-          className={`w-[80px] py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
+          className={`w-[80px] py-2 text-sm font-medium rounded-lg transition-colors duration-150 ${
             value === "KW" ? "text-white" : "text-gray-700"
           }`}
         >
@@ -64,7 +64,7 @@ const CustomTabSlider: React.FC<{
         </button>
         <button
           onClick={() => onChange("CO2")}
-          className={`w-[80px] py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
+          className={`w-[80px] py-2 text-sm font-medium rounded-lg transition-colors duration-150 ${
             value === "CO2" ? "text-white" : "text-gray-700"
           }`}
         >
@@ -109,18 +109,20 @@ const Dashboard: React.FC = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.05,
+        staggerChildren: 0.02,
+        duration: 0.2,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { y: 10, opacity: 0 },
+    hidden: { y: 5, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.3,
+        duration: 0.15,
+        ease: "easeOut",
       },
     },
   };
@@ -129,28 +131,28 @@ const Dashboard: React.FC = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="p-6 space-y-6 bg-white min-h-screen text-gray-900"
+      transition={{ duration: 0.2 }}
+      className="p-8 space-y-8 min-h-screen bg-gradient-to-br from-gray-50 to-white"
     >
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="flex flex-col md:flex-row md:items-center justify-between gap-4"
+        className="flex flex-col md:flex-row md:items-center justify-between gap-6"
       >
         <motion.h1
           variants={itemVariants}
-          className="text-2xl font-semibold text-gray-900"
+          className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600"
         >
-          Dashboard
+          Sustainability Dashboard
         </motion.h1>
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
           <motion.div variants={itemVariants}>
             <Select value={hall} onValueChange={setHall}>
-              <SelectTrigger className="w-48 bg-white border-gray-200 focus-visible:ring-1 focus-visible:ring-gray-400 focus-visible:outline-none rounded-md">
+              <SelectTrigger className="w-48 bg-white/80 backdrop-blur-sm border-gray-200 focus-visible:ring-1 focus-visible:ring-gray-400 focus-visible:outline-none rounded-lg">
                 <SelectValue>{hall}</SelectValue>
               </SelectTrigger>
-              <SelectContent className="bg-white border-gray-200 text-gray-900 rounded-md">
+              <SelectContent className="bg-white/80 backdrop-blur-sm border-gray-200 text-gray-900 rounded-lg">
                 <SelectItem value="University Overview">
                   University Overview
                 </SelectItem>
@@ -172,46 +174,46 @@ const Dashboard: React.FC = () => {
 
       <motion.div
         variants={containerVariants}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
       >
         {[
           {
             title: "CO2 Reduction",
             value: "15%",
             icon: <TrendingUp className="w-5 h-5 text-green-600" />,
+            trend: "+2.5%",
           },
           {
-            title: "Renewable Energy Use",
+            title: "Renewable Energy",
             value: "70%",
             icon: <BarChart2 className="w-5 h-5 text-blue-600" />,
+            trend: "+5%",
           },
           {
             title: "Waste Recycled",
             value: "60%",
             icon: <RefreshCw className="w-5 h-5 text-yellow-600" />,
-          },
-          {
-            title: "Water Conservation",
-            value: "25%",
-            icon: <Droplet className="w-5 h-5 text-teal-600" />,
+            trend: "+3%",
           },
         ].map((metric, i) => (
           <motion.div
             key={i}
             variants={itemVariants}
-            whileHover={{ y: -2 }}
-            className="bg-white p-4 rounded-md border border-gray-200 hover:border-gray-300 transition-all duration-200"
+            whileHover={{ y: -1 }}
+            transition={{ duration: 0.1 }}
+            className="bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200/50 hover:border-gray-300/50 transition-all duration-150 shadow-sm hover:shadow-md"
           >
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-gray-600 mb-0.5">
-                  {metric.title}
-                </div>
-                <div className="text-2xl font-semibold text-gray-900">
+                <div className="text-sm text-gray-600 mb-1">{metric.title}</div>
+                <div className="text-3xl font-bold text-gray-900">
                   {metric.value}
                 </div>
+                <div className="text-sm text-green-600 mt-1">
+                  {metric.trend}
+                </div>
               </div>
-              <div className="p-2 rounded-md bg-gray-50">{metric.icon}</div>
+              <div className="p-3 rounded-lg bg-gray-50/50">{metric.icon}</div>
             </div>
           </motion.div>
         ))}
@@ -223,17 +225,17 @@ const Dashboard: React.FC = () => {
       >
         <motion.div
           variants={itemVariants}
-          className="lg:col-span-2 bg-white p-6 rounded-md border border-gray-200"
+          className="lg:col-span-2 bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200/50 shadow-sm"
         >
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-medium text-gray-900">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold text-gray-900">
               Sustainability Performance
             </h2>
             <Select value={timeframe} onValueChange={setTimeframe}>
-              <SelectTrigger className="w-40 bg-white border-gray-200 focus-visible:ring-1 focus-visible:ring-gray-400 focus-visible:outline-none rounded-md">
+              <SelectTrigger className="w-40 bg-white/80 backdrop-blur-sm border-gray-200 focus-visible:ring-1 focus-visible:ring-gray-400 focus-visible:outline-none rounded-lg">
                 <SelectValue>{timeframe}</SelectValue>
               </SelectTrigger>
-              <SelectContent className="bg-white border-gray-200 text-gray-900 rounded-md">
+              <SelectContent className="bg-white/80 backdrop-blur-sm border-gray-200 text-gray-900 rounded-lg">
                 <SelectItem value="Last Week">Last Week</SelectItem>
                 <SelectItem value="Last Month">Last Month</SelectItem>
                 <SelectItem value="Last 6 Months">Last 6 Months</SelectItem>
@@ -247,11 +249,11 @@ const Dashboard: React.FC = () => {
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#fff",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "6px",
-                  boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)",
-                  color: "#1e293b",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                  backdropFilter: "blur(4px)",
+                  border: "1px solid rgba(226, 232, 240, 0.5)",
+                  borderRadius: "8px",
+                  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                 }}
               />
               <Legend />
@@ -276,9 +278,9 @@ const Dashboard: React.FC = () => {
         <motion.div
           variants={itemVariants}
           whileHover={{ y: -2 }}
-          className="bg-white p-6 rounded-md border border-gray-200"
+          className="bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200/50 shadow-sm"
         >
-          <h2 className="text-lg font-medium text-gray-900 mb-4">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">
             Leaderboard
           </h2>
           <Table>
@@ -305,7 +307,7 @@ const Dashboard: React.FC = () => {
               ].map((entry) => (
                 <TableRow
                   key={entry.rank}
-                  className="hover:bg-gray-50 transition-colors"
+                  className="hover:bg-gray-50/50 transition-colors"
                 >
                   <TableCell className="text-sm font-medium text-gray-900">
                     {entry.rank}
@@ -320,7 +322,7 @@ const Dashboard: React.FC = () => {
               ))}
             </TableBody>
           </Table>
-          <div className="mt-4">
+          <div className="mt-6">
             <PieGraph />
           </div>
         </motion.div>
