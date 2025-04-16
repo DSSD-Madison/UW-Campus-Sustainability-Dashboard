@@ -1,6 +1,7 @@
 "use client"
 
-import { Pie, PieChart, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts"
+import { Pie, PieChart, Cell, ResponsiveContainer, Tooltip, TooltipProps } from "recharts"
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent"
 
 import {
   Card,
@@ -17,8 +18,14 @@ const universityData = [
   { name: "Other Dorms", value: 5, fill: "#f97316" }
 ];
 
+type DormData = {
+  name: string;
+  value: number;
+  fill: string;
+}
+
 // Data for specific dorm comparisons
-const dormComparisonData = {
+const dormComparisonData: Record<string, DormData[]> = {
   "adams": [
     { name: "Adams Hall", value: 100, fill: "#22c55e" }
   ],
@@ -35,7 +42,10 @@ const dormComparisonData = {
 };
 
 // Custom render for the tooltip
-const CustomTooltip = ({ active, payload }) => {
+const CustomTooltip = ({ 
+  active, 
+  payload 
+}: TooltipProps<ValueType, NameType>) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-2 shadow-md border border-gray-200 rounded-md text-sm">
@@ -46,7 +56,11 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-export function PieGraph({ dormId = "all" }) {
+interface PieGraphProps {
+  dormId?: string;
+}
+
+export function PieGraph({ dormId = "all" }: PieGraphProps) {
   // Get the correct data based on dorm selection
   const data = dormComparisonData[dormId] || universityData;
   
@@ -69,7 +83,7 @@ export function PieGraph({ dormId = "all" }) {
               dataKey="value"
               nameKey="name"
               paddingAngle={dormId === "all" ? 2 : 0}
-              label={dormId !== "all" ? ({ name }) => name : undefined}
+              label={dormId !== "all" ? ({ name }: { name: string }) => name : undefined}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />
