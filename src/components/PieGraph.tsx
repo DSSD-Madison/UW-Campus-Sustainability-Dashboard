@@ -65,9 +65,9 @@ export function PieGraph({ dormId = "all" }: PieGraphProps) {
   const data = dormComparisonData[dormId] || universityData;
   
   // Change the title based on whether a specific dorm is selected
-  const title = dormId === "all" ? 
-    "Energy Usage Across Dorms" : 
-    "Selected Dorm Energy Usage";
+  // const title = dormId === "all" ? 
+  //   "Energy Usage Across Dorms" : 
+  //   "Selected Dorm Energy Usage";
 
   return (
     <Card className="border-0 shadow-none">
