@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Zap, Loader2, DollarSign, Ruler, Users, BadgeDollarSign, Building } from "lucide-react";
+import { Zap, Loader2, DollarSign, Ruler, Users, BadgeDollarSign } from "lucide-react";
 import { DatePickerWithRange } from "@/components/DatePickerWithRange";
 import {
   Card,
@@ -30,22 +30,58 @@ import {
 import { DateRange } from "react-day-picker";
 import { PieGraph } from "@/components/PieGraph";
 
+// Define types for the API data
+interface Dorm {
+  id: string;
+  name: string;
+}
+
+interface ConsumptionDataItem {
+  month: string;
+  usage: number;
+  average: number | null;
+}
+
+interface StatItem {
+  label: string;
+  value: string | number;
+  change: string | number;
+  direction?: "up" | "down" | "neutral";
+}
+
+interface StatsData {
+  totalUsage?: StatItem;
+  totalCost?: StatItem;
+  costPerKWH?: StatItem;
+  usagePerSqFt?: StatItem;
+  capacity?: StatItem;
+  usagePerPerson?: StatItem;
+  [key: string]: StatItem | undefined;
+}
+
+interface LeaderboardItem {
+  id: string;
+  name: string;
+  value: number;
+  unit: string;
+}
+
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(2025, 0, 1),
     to: new Date(),
   });
-  const [building, setBuilding] = useState("all");
-  const [consumptionData, setConsumptionData] = useState([]);
-  const [statsData, setStatsData] = useState({});
-  const [dorms, setDorms] = useState([]);
-  const [isLoadingDorms, setIsLoadingDorms] = useState(true);
-  const [leaderboardData, setLeaderboardData] = useState([]);
+  const [building, setBuilding] = useState<string>("all");
+  const [consumptionData, setConsumptionData] = useState<ConsumptionDataItem[]>([]);
+  const [statsData, setStatsData] = useState<StatsData>({});
+  const [dorms, setDorms] = useState<Dorm[]>([]);
+  const [isLoadingDorms, setIsLoadingDorms] = useState<boolean>(true);
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardItem[]>([]);
 
   // Fake data for leaderboard
   useEffect(() => {
     // Fake leaderboard data
-    const fakeDormLeaderboard = [
+    const fakeDormLeaderboard: LeaderboardItem[] = [
       { id: "0506", name: "Dejope Residence Hall", value: 231586, unit: "kWh" },
       { id: "0560", name: "Sellery Residence Hall", value: 222128, unit: "kWh" },
       { id: "0556", name: "Ogg Residence Hall", value: 134590, unit: "kWh" },
@@ -70,7 +106,7 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    const formatDate = (date: Date) => {
+    const formatDate = (date: Date): string => {
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
       return `${month}/${year}`;
@@ -90,7 +126,7 @@ const Dashboard = () => {
         console.log(data);
 
         if (data.dataItems) {
-          const mappedData = data.dataItems.map((item) => ({
+          const mappedData: ConsumptionDataItem[] = data.dataItems.map((item: any) => ({
             month: item.month,
             usage: item.usageKWH,
             average: item.averageUsagePerDorm ?? null,
