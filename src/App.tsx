@@ -1,10 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./layout/Layout";
 import Home from "./routes/Home";
-import NotFound from "./routes/NotFound";
-import Heatmap from "./routes/Heatmap";
 import About from "./routes/About";
-import Locations from "./routes/Locations";
+import NotFound from "./routes/NotFound";
 import { AppProvider } from "./context/AppContext";
 
 const App = () => {
@@ -32,6 +30,8 @@ const App = () => {
               } />
             ))
           }
+          <Route path="*" element={<NotFound />}></Route>
+
         </Routes>
       </AppProvider>
     </Router>

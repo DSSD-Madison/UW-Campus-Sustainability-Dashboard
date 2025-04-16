@@ -1,19 +1,14 @@
 import React, { createContext, useState } from 'react';
-import { User, defaultUser } from '@/types/user/user';
 
 interface AppContextProps {
-  user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
-  loginLoading: boolean;
-  setLoginLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Create default context state
 const defaultContextState: AppContextProps = {
-  user: defaultUser,
-  setUser: () => {},
-  loginLoading: true,
-  setLoginLoading: () => {},
+  loading: true,
+  setLoading: () => {},
 };
 
 // Create the context with the default state
@@ -25,14 +20,11 @@ interface AppProviderProps {
 
 const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   // Initialize state with default values
-  const [loginLoading, setLoginLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<User>(defaultUser);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const value = {
-    user,
-    setUser,
-    loginLoading,
-    setLoginLoading
+    loading,
+    setLoading,
   };
 
   return (
