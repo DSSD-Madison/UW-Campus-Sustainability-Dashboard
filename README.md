@@ -16,51 +16,11 @@ This is a student-built sustainability dashboard for the University of Wisconsin
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** Next.js (React) with Tailwind CSS and Framer Motion
+- **Frontend:** React with Tailwind CSS, Shadcn, Framer Motion
 - **Charts:** Recharts + custom animated components
 - **Icons:** Lucide-react
 - **Backend:** AWS Lambda functions (REST API)
 - **Database:** DynamoDB
-- **Deployment:** Vercel (or your preferred platform)
-
----
-
-## 📁 Project Structure (Frontend)
-
-```bash
-/components
-  ├─ ui/                  # UI kit components (card, button, select, etc.)
-  ├─ DatePickerWithRange  # Custom date picker component
-  └─ PieGraph             # Recharts-based energy pie chart
-/pages
-  ├─ index.tsx            # Main dashboard
-  └─ about.tsx            # About page with mission & methodology
-/styles
-  └─ globals.css          # Tailwind styles
-```
-
----
-
-## 🌐 API Endpoints
-
-- `/list` – Returns list of all residence halls (name + id)
-- `/dorm?dorm={id}&startTime={mm/yyyy}&endTime={mm/yyyy}` – Returns usage and summary stats for one or all dorms
-
-### Sample Response from `/dorm`
-```json
-{
-  "dataItems": [
-    { "month": "01/2025", "usageKWH": 12000, "averageUsagePerDorm": 9500 },
-    ...
-  ],
-  "summary": {
-    "totalUsage": { "value": 45000, "label": "Total Usage", "change": 12, "direction": "up" },
-    "totalCost": { "value": 5400, "label": "Total Cost", "change": 5, "direction": "down" },
-    ...
-  }
-}
-```
-
 ---
 
 ## 🧪 Development Setup
