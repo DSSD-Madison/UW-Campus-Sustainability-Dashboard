@@ -1,5 +1,6 @@
 {
-  "name": "react-vite-ui",
+  "name": "uw-campus-sustainability-dashboard",
+  "homepage": "https://dssd-madison.github.io/UW-Campus-Sustainability-Dashboard/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
