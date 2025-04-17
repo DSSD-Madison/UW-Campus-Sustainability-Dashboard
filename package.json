@@ -1,6 +1,6 @@
 {
-  "name": "uw-campus-sustainability-dashboard",
   "homepage": "https://dssd-madison.github.io/UW-Campus-Sustainability-Dashboard/",
+  "name": "uw-campus-sustainability-dashboard",
   "private": true,
   "version": "0.0.0",
   "type": "module",
