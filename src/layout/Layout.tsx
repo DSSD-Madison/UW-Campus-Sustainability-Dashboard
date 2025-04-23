@@ -1,56 +1,59 @@
-"use client"
+"use client";
 
-import { AppSidebar } from "@/components/app-sidebar"
-import { SiteHeader } from "@/components/site-header"
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { motion } from "framer-motion"
-import { ReactNode } from "react"
+import { SiteHeader } from "@/components/site-header";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
-export default function Layout({ children }: { children: ReactNode }) {
-  // Animation variants for staggered entrance
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.4,
-        when: "beforeChildren",
-      },
-    },
-  }
-
-  const contentVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.3,
-      },
-    },
-  }
-
+export default function Layout({ children }: { children?: React.ReactNode }) {
   return (
-    <motion.div 
-      className="[--header-height:calc(theme(spacing.14))] min-h-screen bg-[hsl(var(--wsbackground))]"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
+    <div
+      className="[--header-height:calc(theme(spacing.14))] min-h-screen bg-[hsl(var(--wsbackground))] main-container"
     >
       <SidebarProvider className="flex flex-col">
         <SiteHeader />
         <div className="flex flex-1">
           <AppSidebar />
           <SidebarInset>
-            <motion.div 
-              className="flex flex-1 flex-col gap-4 p-6 bg-[hsl(var(--wsbackground))]"
-              variants={contentVariants}
+            <div
+              className="flex flex-1 flex-col gap-4 p-6 bg-[hsl(var(--wsbackground))] content-animation"
             >
               {children}
-            </motion.div>
+            </div>
           </SidebarInset>
         </div>
       </SidebarProvider>
-    </motion.div>
-  )
+
+      <style>{`
+        /* Main container fade-in animation */
+        .main-container {
+          opacity: 0;
+          animation: fadeIn 0.4s ease forwards;
+        }
+
+        /* Content fade-in and slide up animation */
+        .content-animation {
+          opacity: 0;
+          transform: translateY(10px);
+          animation: fadeInUp 0.3s ease forwards;
+          animation-delay: 0.1s; /* Delay to simulate "when: beforeChildren" */
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+          from { 
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to { 
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+    </div>
+  );
 }

@@ -1,5 +1,4 @@
 {
-  "homepage": "https://dssd-madison.github.io/UW-Campus-Sustainability-Dashboard/",
   "name": "uw-campus-sustainability-dashboard",
   "private": true,
   "version": "0.0.0",
@@ -24,7 +23,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "framer-motion": "^12.4.3",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-day-picker": "^8.10.1",

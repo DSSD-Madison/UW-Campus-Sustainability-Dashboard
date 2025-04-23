@@ -1,41 +1,47 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+"use client";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AppProvider } from "./context/AppContext";
+
 import Layout from "./layout/Layout";
 import Home from "./routes/Home";
 import About from "./routes/About";
 import NotFound from "./routes/NotFound";
-import { AppProvider } from "./context/AppContext";
 
-const App = () => {
+export default function App() {
 
-  const routes = [
+  const routeArr = [
     {
-      element: Home,
-      path: '/'
+      path: "/",
+      element: <Home />
+    }
+    ,
+    {
+      path: "/about",
+      element: <About />
     },
     {
-      element: About,
-      path: '/about'
+      path: "*",
+      element: <NotFound />
     }
   ]
   return (
-    <Router>
-      <AppProvider>
-        <Routes>
-          {
-            routes.map(route => (
-              <Route key={route.path} path={route.path} element={
-                <Layout>
-                  <route.element />
-                </Layout>
-              } />
-            ))
-          }
-          <Route path="*" element={<NotFound />}></Route>
-
-        </Routes>
-      </AppProvider>
-    </Router>
+      <Router basename={'/UW-Campus-Sustainability-Dashboard'}>
+        <AppProvider>
+          <Routes>
+            {
+              routeArr.map((route, index) => {
+                return(
+                  <Route key = {index} path={route.path} element={
+                    <Layout>
+                      {route.element}
+                    </Layout>
+                  } />
+                )
+            })
+            }
+          </Routes>
+        </AppProvider>
+      </Router>
   );
-};
-
-export default App;
+}

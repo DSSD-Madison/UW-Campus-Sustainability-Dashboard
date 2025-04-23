@@ -1,8 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "framer-motion"
-import { type LucideIcon } from "lucide-react"
+import { ExternalLink, type LucideIcon } from "lucide-react"
 
 import {
   SidebarGroup,
@@ -12,27 +11,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-// Animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, x: -5 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.2 },
-  },
-};
-
 export function NavSecondary({
   items,
   ...props
@@ -41,40 +19,90 @@ export function NavSecondary({
     title: string
     url: string
     icon: LucideIcon
+    isActive?: boolean
+    external?: boolean
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   return (
-    <motion.div 
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
+    <div className="fade-in-container">
       <SidebarGroup {...props}>
         <SidebarGroupContent>
           <SidebarMenu>
-            {items.map((item) => (
-              <motion.div 
+            {items.map((item, index) => (
+              <div 
                 key={item.title} 
-                variants={itemVariants}
-                whileHover={{ x: 3 }}
+                className="fade-in-item"
+                style={{ animationDelay: `${100 + index * 50}ms` }}
               >
                 <SidebarMenuItem>
                   <SidebarMenuButton 
                     asChild 
                     size="sm" 
-                    className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-200"
+                    className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-200 menu-item-hover"
                   >
-                    <a href={item.url}>
-                      <item.icon className="text-gray-500 group-hover:text-gray-600" />
-                      <span>{item.title}</span>
-                    </a>
+                    {item.external ? (
+                      <a 
+                        href={item.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2"
+                      >
+                        <item.icon className="text-gray-500 group-hover:text-gray-600" />
+                        <span>{item.title}</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
+                      </a>
+                    ) : (
+                      <a href={item.url} className="flex items-center gap-2">
+                        <item.icon className="text-gray-500 group-hover:text-gray-600" />
+                        <span>{item.title}</span>
+                      </a>
+                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              </motion.div>
+              </div>
             ))}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
-    </motion.div>
-  )
+
+      <style>{`
+        /* Container fade-in animation */
+        .fade-in-container {
+          opacity: 0;
+          animation: fadeIn 0.3s ease forwards;
+        }
+
+        /* Item fade-in with slight movement */
+        .fade-in-item {
+          opacity: 0;
+          transform: translateX(-5px);
+          animation: fadeInSlide 0.2s ease forwards;
+        }
+
+        /* Hover effect for menu items */
+        .menu-item-hover {
+          transition: transform 0.2s ease;
+        }
+        .menu-item-hover:hover {
+          transform: translateX(3px);
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes fadeInSlide {
+          from { 
+            opacity: 0;
+            transform: translateX(-5px);
+          }
+          to { 
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+      `}</style>
+    </div>
+  );
 }

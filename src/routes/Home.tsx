@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import {
   AreaChart,
   Area,
@@ -141,29 +140,6 @@ const Dashboard = () => {
       .catch((err) => console.error("Error fetching energy data:", err));
   }, [building, dateRange]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.02,
-        duration: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 5, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.15,
-        ease: "easeOut",
-      },
-    },
-  };
-
   // Define the stat cards
   const statCards = [
     {
@@ -189,40 +165,32 @@ const Dashboard = () => {
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="p-6 space-y-8 bg-[hsl(var(--wsbackground))] min-h-screen"
-    >
+    <div className="p-6 space-y-8 bg-[hsl(var(--wsbackground))] min-h-screen page-fade-in">
       {/* Header */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10"
-      >
-        <motion.div variants={itemVariants} className="flex items-center gap-3">
-          <div className="bg-green-100 p-2.5 rounded-lg">
-            <Zap className="w-6 h-6 text-green-600" />
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 stagger-container">
+        <div className="stagger-item">
+          <div className="flex items-center gap-3">
+            <div className="bg-green-100 p-2.5 rounded-lg">
+              <Zap className="w-6 h-6 text-green-600" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                <span className="text-red-600">University of Wisconsin-Madison </span>
+                Campus Sustainability Dashboard
+              </h1>
+              <p className="text-gray-500 text-sm">
+                Track and analyze energy consumption across campus
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              <span className="text-red-600">University of Wisconsin-Madison </span>
-              Campus Sustainability Dashboard
-            </h1>
-            <p className="text-gray-500 text-sm">
-              Track and analyze energy consumption across campus
-            </p>
-          </div>
-        </motion.div>
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center">
-          <motion.div variants={itemVariants}>
+          <div className="stagger-item" style={{ "--index": "2" } as React.CSSProperties}>
             <DatePickerWithRange onDateChange={setDateRange} />
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants}>
+          <div className="stagger-item" style={{ "--index": "3" } as React.CSSProperties}>
             {isLoadingDorms ? (
               <div className="flex items-center justify-center min-w-56 px-4 py-2 border border-gray-200 bg-white rounded-lg shadow-sm">
                 <Loader2 className="animate-spin text-gray-500" />
@@ -246,25 +214,21 @@ const Dashboard = () => {
                 </SelectContent>
               </Select>
             )}
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Stats Cards */}
-      <motion.div
-        variants={containerVariants}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-container">
         {statCards.map(({ key, icon, bg }, index) => {
           const stat = statsData[key];
           if (!stat) return null;
 
           return (
-            <motion.div
+            <div
               key={index}
-              variants={itemVariants}
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
+              className="stagger-item stat-card"
+              style={{ "--index": index + 1 } as React.CSSProperties}
             >
               <Card className="border-0 shadow-md overflow-hidden relative h-full bg-white">
                 {/* Moved bubble to top right */}
@@ -293,18 +257,18 @@ const Dashboard = () => {
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           );
         })}
-      </motion.div>
+      </div>
 
       {/* Chart and Sidebar Layout */}
-      <motion.div variants={containerVariants} className="pt-6">
+      <div className="pt-6 stagger-container">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column: Main Chart + Building Info */}
           <div className="lg:col-span-2 space-y-6">
             {/* Main Chart */}
-            <motion.div variants={itemVariants}>
+            <div className="stagger-item" style={{ "--index": "1" } as React.CSSProperties}>
               <Card className="border-0 shadow-md">
                 <CardHeader className="pb-2">
                   <CardTitle>Electricity Consumption</CardTitle>
@@ -344,10 +308,10 @@ const Dashboard = () => {
                   </ResponsiveContainer>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
             
             {/* Building Information - Now directly below the graph */}
-            <motion.div variants={itemVariants}>
+            <div className="stagger-item" style={{ "--index": "2" } as React.CSSProperties}>
               <Card className="border-0 shadow-md">
                 <CardHeader className="pb-2">
                   <CardTitle>Building Information</CardTitle>
@@ -381,11 +345,11 @@ const Dashboard = () => {
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           </div>
 
           {/* Sidebar with Leaderboard and Piechart */}
-          <motion.div variants={itemVariants} className="lg:col-span-1">
+          <div className="lg:col-span-1 stagger-item" style={{ "--index": "3" } as React.CSSProperties}>
             <div className="space-y-6">
               {/* Leaderboard Card */}
               <Card className="border-0 shadow-md">
@@ -440,10 +404,51 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
-    </motion.div>
+        </div>
+
+      <style>{`
+        /* Page fade-in animation */
+        .page-fade-in {
+          opacity: 0;
+          animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        /* Staggered animations */
+        .stagger-container {
+          opacity: 1;
+        }
+
+        .stagger-item {
+          opacity: 0;
+          transform: translateY(5px);
+          animation: staggerFade 0.15s ease-out forwards;
+          animation-delay: calc(var(--index, 0) * 20ms);
+        }
+
+        @keyframes staggerFade {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* Stat card hover effect */
+        .stat-card {
+          transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+          transform: scale(1.05);
+        }
+      `}</style>
+    </div>
   );
 };
 

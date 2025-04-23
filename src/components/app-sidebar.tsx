@@ -1,62 +1,56 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import {
-  BarChart2,
-  FileText,
-  HelpCircle,
-  Send,
-} from "lucide-react"
-
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import {
-  Sidebar,
-  SidebarContent,
-} from "@/components/ui/sidebar"
+import * as React from "react";
+import { BarChart2, FileText, HelpCircle, Send } from "lucide-react";
+import { NavMain } from "@/components/nav-main";
+import { NavSecondary } from "@/components/nav-secondary";
+import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
 
 const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/",
       icon: BarChart2,
       isActive: true,
       items: [
-        {
-          title: "Overview",
-          url: "/",
-        },
-        {
-          title: "Heatmap (Coming Soon)",
-          url: "#",
-        }
+        { title: "Overview", url: "/" },
+        { title: "Heatmap (Coming Soon)", url: "/" },
       ],
+      external: false,
     },
     {
       title: "About",
       url: "/about",
       icon: HelpCircle,
+      isActive: false,
+      external: false,
     },
     {
       title: "Documentation",
-      url: "/LINK_TO_DOCUMENTATION",
+      url: "https://github.com/DSSD-Madison/UW-Campus-Sustainability-Dashboard",
       icon: FileText,
-    }
+      isActive: false,
+      external: true,
+    },
   ],
   navSecondary: [
     {
       title: "Support",
-      url: "/LINK_TO_SUPPORT",
+      url: "https://madison.dssdglobal.org/",
       icon: HelpCircle,
+      isActive: false,
+      external: true,
     },
     {
-      title: "Feedback",
-      url: "/LINK_TO_FEEDBACK",
+      title: "Report a Bug",
+      url: "https://github.com/DSSD-Madison/UW-Campus-Sustainability-Dashboard/issues",
       icon: Send,
+      isActive: false,
+      external: true,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -73,5 +67,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
