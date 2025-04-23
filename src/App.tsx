@@ -1,6 +1,6 @@
 "use client";
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { AppProvider } from "./context/AppContext";
 
 import Layout from "./layout/Layout";
@@ -26,7 +26,7 @@ export default function App() {
     }
   ]
   return (
-      <Router basename={import.meta.env.BASE_URL}>
+      <Router>
         <AppProvider>
           <Routes>
             {
