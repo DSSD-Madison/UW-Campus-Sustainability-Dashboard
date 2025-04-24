@@ -1,73 +1,51 @@
-"use client"
-
-import { Pie, PieChart, Cell, ResponsiveContainer, Tooltip, TooltipProps } from "recharts"
-import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent"
+"use client";
 
 import {
-  Card,
-  CardContent,
-} from "@/components/ui/card"
+  Pie,
+  PieChart,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  TooltipProps
+} from "recharts";
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
+import { Card, CardContent } from "@/components/ui/card";
 
-// Data for distribution across dorms
-const universityData = [
-  { name: "Adams Hall", value: 28, fill: "#22c55e" },
-  { name: "Sellery Hall", value: 24, fill: "#60a5fa" },
-  { name: "Witte Hall", value: 18, fill: "#38bdf8" },
-  { name: "Dejope Hall", value: 15, fill: "#a3e635" },
-  { name: "Ogg Hall", value: 10, fill: "#94a3b8" },
-  { name: "Other Dorms", value: 5, fill: "#f97316" }
-];
-
-type DormData = {
+interface LeaderboardItem {
+  dormId: string; 
   name: string;
-  value: number;
-  fill: string;
+  totalUsageKwh: number;
+  usagePerSquareFoot: number;
+  usagePerResident: number;
+  percentageOfTotal: number;
 }
 
-// Data for specific dorm comparisons
-const dormComparisonData: Record<string, DormData[]> = {
-  "adams": [
-    { name: "Adams Hall", value: 100, fill: "#22c55e" }
-  ],
-  "barnard": [
-    { name: "Barnard Hall", value: 100, fill: "#60a5fa" }
-  ],
-  "dejope": [
-    { name: "Dejope Hall", value: 100, fill: "#a3e635" }
-  ],
-  "witte": [
-    { name: "Witte Hall", value: 100, fill: "#38bdf8" }
-  ],
-  "all": universityData
-};
+interface PieGraphProps {
+  dormId?: string;
+  leaderboardData?: LeaderboardItem[];
+}
 
-// Custom render for the tooltip
-const CustomTooltip = ({ 
-  active, 
-  payload 
-}: TooltipProps<ValueType, NameType>) => {
-  if (active && payload && payload.length) {
+const CustomTooltip = ({ active, payload }: TooltipProps<ValueType, NameType>) => {
+  if (active && payload && payload.length && payload[0].value != null && payload[0].name) {
     return (
       <div className="bg-white p-2 shadow-md border border-gray-200 rounded-md text-sm">
-        <p className="font-medium">{`${payload[0].name}: ${payload[0].value}%`}</p>
+        <p className="font-medium">
+          {`${payload[0].name}: ${Number(payload[0].value).toLocaleString()} kWh`}
+        </p>
       </div>
     );
   }
   return null;
 };
 
-interface PieGraphProps {
-  dormId?: string;
-}
+export function PieGraph({ dormId = "all", leaderboardData = [] }: PieGraphProps) {
+  if (dormId !== "all" || leaderboardData.length === 0) return null;
 
-export function PieGraph({ dormId = "all" }: PieGraphProps) {
-  // Get the correct data based on dorm selection
-  const data = dormComparisonData[dormId] || universityData;
-  
-  // Change the title based on whether a specific dorm is selected
-  // const title = dormId === "all" ? 
-  //   "Energy Usage Across Dorms" : 
-  //   "Selected Dorm Energy Usage";
+  const pieData = leaderboardData.map((item) => ({
+    name: `${item.name} (${item.percentageOfTotal}%)`,
+    value: item.totalUsageKwh,
+    fill: `hsl(${Math.floor(Math.random() * 360)}, 70%, 60%)`,
+  }));
 
   return (
     <Card className="border-0 shadow-none">
@@ -75,35 +53,23 @@ export function PieGraph({ dormId = "all" }: PieGraphProps) {
         <ResponsiveContainer width="100%" height={220}>
           <PieChart>
             <Pie
-              data={data}
+              data={pieData}
               cx="50%"
               cy="50%"
-              innerRadius={dormId === "all" ? 50 : 0}
+              innerRadius={50}
               outerRadius={80}
               dataKey="value"
               nameKey="name"
-              paddingAngle={dormId === "all" ? 2 : 0}
-              label={dormId !== "all" ? ({ name }: { name: string }) => name : undefined}
+              paddingAngle={2}
             >
-              {data.map((entry, index) => (
+              {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
           </PieChart>
         </ResponsiveContainer>
-        
-        {dormId === "all" && (
-          <div className="flex flex-wrap justify-center gap-3 mt-2">
-            {universityData.map((entry, index) => (
-              <div key={`legend-${index}`} className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.fill }}></div>
-                <span className="text-xs text-gray-700">{entry.name} ({entry.value}%)</span>
-              </div>
-            ))}
-          </div>
-        )}
       </CardContent>
     </Card>
-  )
+  );
 }

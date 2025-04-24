@@ -59,11 +59,14 @@ interface StatsData {
 }
 
 interface LeaderboardItem {
-  id: string;
+  dormId: string; 
   name: string;
-  value: number;
-  unit: string;
+  totalUsageKwh: number;
+  usagePerSquareFoot: number;
+  usagePerResident: number;
+  percentageOfTotal: number;
 }
+
 
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
@@ -77,19 +80,27 @@ const Dashboard = () => {
   const [isLoadingDorms, setIsLoadingDorms] = useState<boolean>(true);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardItem[]>([]);
 
-  // Fake data for leaderboard
+  const formatDate = (date: Date): string => {
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${month}/${year}`;
+  };
+
   useEffect(() => {
-    // Fake leaderboard data
-    const fakeDormLeaderboard: LeaderboardItem[] = [
-      { id: "0506", name: "Dejope Residence Hall", value: 231586, unit: "kWh" },
-      { id: "0560", name: "Sellery Residence Hall", value: 222128, unit: "kWh" },
-      { id: "0556", name: "Ogg Residence Hall", value: 134590, unit: "kWh" },
-      { id: "0570", name: "Witte Residence Hall", value: 118750, unit: "kWh" },
-      { id: "0580", name: "Waters Residence Hall", value: 95210, unit: "kWh" },
-    ];
-    
-    setLeaderboardData(fakeDormLeaderboard);
-  }, []);
+    if (building !== "all") return;
+
+    const start = dateRange?.from ? formatDate(dateRange.from) : "01/2025";
+    const end = dateRange?.to ? formatDate(dateRange.to) : "12/2025";
+
+    fetch(`https://yz83hrwsg4.execute-api.us-east-2.amazonaws.com/dev/leaderboard?startTime=${start}&endTime=${end}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.leaderboard) {
+          setLeaderboardData(data.leaderboard);
+        }
+      })
+      .catch((err) => console.error("Leaderboard fetch error:", err));
+  }, [building, dateRange]);
 
   useEffect(() => {
     setIsLoadingDorms(true);
@@ -105,11 +116,6 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    const formatDate = (date: Date): string => {
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      return `${month}/${year}`;
-    };
 
     const startDate = dateRange?.from ? formatDate(dateRange.from) : "01/2025";
     const endDate = dateRange?.to ? formatDate(dateRange.to) : "12/2025";
@@ -348,10 +354,8 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Sidebar with Leaderboard and Piechart */}
           <div className="lg:col-span-1 stagger-item" style={{ "--index": "3" } as React.CSSProperties}>
             <div className="space-y-6">
-              {/* Leaderboard Card */}
               <Card className="border-0 shadow-md">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg">Energy Usage Leaderboard</CardTitle>
@@ -360,10 +364,10 @@ const Dashboard = () => {
                 <CardContent>
                   <div className="space-y-4">
                     {leaderboardData.map((dorm, index) => (
-                      <div key={dorm.id} className="flex items-center">
+                      <div key={dorm.dormId} className="flex items-center">
                         <div className={`flex items-center justify-center w-6 h-6 rounded-full mr-3 ${
-                          index === 0 ? "bg-yellow-500" : 
-                          index === 1 ? "bg-gray-300" : 
+                          index === 0 ? "bg-yellow-500" :
+                          index === 1 ? "bg-gray-300" :
                           index === 2 ? "bg-amber-700" : "bg-gray-200"
                         }`}>
                           <span className="text-xs font-bold text-white">{index + 1}</span>
@@ -371,38 +375,52 @@ const Dashboard = () => {
                         <div className="flex-1">
                           <div className="flex justify-between items-baseline">
                             <h4 className="font-medium text-sm text-gray-900">{dorm.name}</h4>
-                            <span className="text-sm text-gray-500">{dorm.value.toLocaleString()} {dorm.unit}</span>
+                            <span className="text-sm text-gray-500">
+                              {dorm.totalUsageKwh.toLocaleString()} kWh
+                            </span>
                           </div>
                           <div className="w-full bg-gray-100 rounded-full h-1.5 mt-1">
-                              <div 
-                                className={`h-1.5 rounded-full ${
-                                  index === 0 ? "bg-yellow-500" : 
-                                  index === 1 ? "bg-gray-400" : 
-                                  index === 2 ? "bg-amber-700" : "bg-gray-300"
-                                }`}
-                                style={{ 
-                                  width: `${(dorm.value / leaderboardData[0].value) * 100}%` 
-                                }}
-                              >
-                              </div>
-                            </div>
+                            <div
+                              className={`h-1.5 rounded-full ${
+                                index === 0 ? "bg-yellow-500" :
+                                index === 1 ? "bg-gray-400" :
+                                index === 2 ? "bg-amber-700" : "bg-gray-300"
+                              }`}
+                              style={{
+                                width: `${
+                                  leaderboardData[0]?.totalUsageKwh
+                                    ? (dorm.totalUsageKwh / leaderboardData[0].totalUsageKwh) * 100
+                                    : 0
+                                }%`
+                              }}
+                            />
                           </div>
                         </div>
-                      ))}
+                      </div>
+                    ))}
+
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Pie Chart Card - Using the imported component */}
-                <Card className="border-0 shadow-md">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">Energy Distribution</CardTitle>
-                    <CardDescription>Usage across campus buildings</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <PieGraph dormId={building === "all" ? "all" : building} />
-                  </CardContent>
-                </Card>
+                {
+                  building === "all" && (
+                    <Card className="border-0 shadow-md">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-lg">Energy Distribution</CardTitle>
+                        <CardDescription>Usage across campus buildings</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                      {building === "all" && (
+                          <PieGraph
+                            dormId="all"
+                            leaderboardData={leaderboardData}
+                          />
+                        )}
+                      </CardContent>
+                    </Card>
+                  )
+                }
               </div>
             </div>
           </div>
