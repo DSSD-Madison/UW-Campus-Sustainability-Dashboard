@@ -16,7 +16,7 @@ This is a student-built sustainability dashboard for the University of Wisconsin
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React with Tailwind CSS, Shadcn, Framer Motion
+- **Frontend:** React with Tailwind CSS, Shadcn
 - **Charts:** Recharts + custom animated components
 - **Icons:** Lucide-react
 - **Backend:** AWS Lambda functions (REST API)
@@ -66,4 +66,10 @@ This dashboard was created by the **DSSD Madison** student team in collaboration
 
 ## 📬 Feedback
 
-If you're a student, faculty, or staff member with ideas or feedback, feel free to reach out or contribute!
+If you're a student, faculty, or staff member with ideas or feedback, feel free to reach out or contribute! 
+
+---
+
+## ❗Report an Issue
+
+Check out the issues tab to report an issue and we will work on it ASAP!
