@@ -67,3 +67,9 @@ This dashboard was created by the **DSSD Madison** student team in collaboration
 ## 📬 Feedback
 
 If you're a student, faculty, or staff member with ideas or feedback, feel free to reach out or contribute!
+
+---
+
+## ❗Report An Issue
+
+If you find a bug or issue, head over to the Issues tab and create a new one — we'll take care of it as soon as possible!
