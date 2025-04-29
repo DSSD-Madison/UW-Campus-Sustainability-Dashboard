@@ -70,7 +70,7 @@ interface LeaderboardItem {
 
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(2025, 0, 1),
+    from: new Date(2023, 0, 1),
     to: new Date(),
   });
   const [building, setBuilding] = useState<string>("all");
@@ -89,8 +89,8 @@ const Dashboard = () => {
   useEffect(() => {
     if (building !== "all") return;
 
-    const start = dateRange?.from ? formatDate(dateRange.from) : "01/2025";
-    const end = dateRange?.to ? formatDate(dateRange.to) : "12/2025";
+    const start = dateRange?.from && formatDate(dateRange.from)
+    const end = dateRange?.to && formatDate(dateRange.to)
 
     fetch(`https://yz83hrwsg4.execute-api.us-east-2.amazonaws.com/dev/leaderboard?startTime=${start}&endTime=${end}`)
       .then((res) => res.json())
@@ -354,7 +354,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-1 stagger-item" style={{ "--index": "3" } as React.CSSProperties}>
+         <div className="lg:col-span-1 stagger-item" style={{ "--index": "3" } as React.CSSProperties}>
             <div className="space-y-6">
               <Card className="border-0 shadow-md">
                 <CardHeader className="pb-2">
